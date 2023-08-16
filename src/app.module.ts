@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { LoggerModule } from 'nestjs-pino';
 import { Request, Response } from 'express';
 import { PostModule } from './post/post.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PostModule } from './post/post.module';
       },
     }),
     PostModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],
