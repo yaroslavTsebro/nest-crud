@@ -2,15 +2,16 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug: api",
       "type": "node",
       "request": "attach",
-      "restart": true,
-      "port": 9229,
-      "address": "0.0.0.0",
-      "localRoot": "${workspaceFolder}",
+      "name": "Debug: thomas-nestjs",
       "remoteRoot": "/app",
+      "localRoot": "${workspaceFolder}",
       "protocol": "inspector",
+      "port": 9229,
+      "sourceMaps": true,
+      "restart": true,
+      "address": "0.0.0.0",
       "skipFiles": ["<node_internals>/**"]
     }
   ]
