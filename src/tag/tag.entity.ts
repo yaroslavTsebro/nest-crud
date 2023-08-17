@@ -1,9 +1,21 @@
 import { Post } from 'src/post/post.entity';
-import { BaseEntity } from 'src/shared/entity/base.entity';
-import { Column, Entity, ManyToMany } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
-export class Tag extends BaseEntity {
+export class Tag {
+  @PrimaryGeneratedColumn()
+  id: number;
+  @CreateDateColumn()
+  createdAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
   @Column({ unique: true, length: 50, type: 'varchar', nullable: false })
   name: string;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,9 +1,22 @@
-import { BaseEntity } from 'src/shared/entity/base.entity';
 import { Tag } from 'src/tag/tag.entity';
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
-export class Post extends BaseEntity {
+export class Post {
+  @PrimaryGeneratedColumn()
+  id: number;
+  @CreateDateColumn()
+  createdAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
   @Column({ unique: true, length: 50, type: 'varchar', nullable: false })
   title: string;
   @Column({ length: 500, type: 'varchar', nullable: false })
