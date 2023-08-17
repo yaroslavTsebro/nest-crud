@@ -1,10 +1,12 @@
+import { Injectable } from '@nestjs/common';
 import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-export abstract class BaseEntity {
+@Injectable()
+export class BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
   @CreateDateColumn()

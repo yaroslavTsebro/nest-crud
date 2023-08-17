@@ -4,7 +4,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PostUpdateDto } from './dto/post-update.dto';
 import { Tag } from 'src/tag/tag.entity';
 import { PostCreateDto } from './dto/post-create.dto';
+import { Injectable } from '@nestjs/common';
+import { AppError } from 'src/shared/entity/app-error.entity';
+import { ErrorCodes } from 'src/shared/constant/error-codes.constant';
+import { ErrorMessages } from 'src/shared/constant/error-messages.constant';
 
+@Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Post)
@@ -23,7 +28,10 @@ export class PostService {
     });
 
     if (!post) {
-      throw new Error(`Post with ID ${id} not found`);
+      throw new AppError(
+        ErrorCodes.POST_NOT_FOUND,
+        ErrorMessages.POST_NOT_FOUND,
+      );
     }
 
     post.tags = await post.tags;
@@ -33,7 +41,7 @@ export class PostService {
   async deleteById(id: number): Promise<number> {
     const deleteResults = await this.postRepository.delete({ id: id });
     if (!deleteResults.affected || deleteResults.affected === 0) {
-      throw new Error(`Post with ID ${id} not found`);
+      throw new AppError(ErrorCodes.BAD_REQUEST, ErrorMessages.BAD_REQUEST);
     }
     return deleteResults.affected;
   }
@@ -42,7 +50,10 @@ export class PostService {
     const post = await this.postRepository.findOneBy({ id });
 
     if (!post) {
-      throw new Error(`Post with ID ${id} not found`);
+      throw new AppError(
+        ErrorCodes.POST_NOT_FOUND,
+        ErrorMessages.POST_NOT_FOUND,
+      );
     }
 
     if (dto.title) {
