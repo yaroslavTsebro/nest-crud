@@ -19,65 +19,85 @@ export class PostService {
   ) {}
 
   async findAll(): Promise<Post[]> {
-    return await this.postRepository.find();
+    try {
+      return await this.postRepository.find();
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findById(id: number): Promise<Post> {
-    const post = await this.postRepository.findOneBy({
-      id,
-    });
+    try {
+      const post = await this.postRepository.findOneBy({
+        id,
+      });
 
-    if (!post) {
-      throw new AppError(
-        ErrorCodes.POST_NOT_FOUND,
-        ErrorMessages.POST_NOT_FOUND,
-      );
+      if (!post) {
+        throw new AppError(
+          ErrorCodes.POST_NOT_FOUND,
+          ErrorMessages.POST_NOT_FOUND,
+        );
+      }
+
+      post.tags = await post.tags;
+      return post;
+    } catch (error) {
+      throw error;
     }
-
-    post.tags = await post.tags;
-    return post;
   }
 
   async deleteById(id: number): Promise<number> {
-    const deleteResults = await this.postRepository.delete({ id: id });
-    if (!deleteResults.affected || deleteResults.affected === 0) {
-      throw new AppError(ErrorCodes.BAD_REQUEST, ErrorMessages.BAD_REQUEST);
+    try {
+      const deleteResults = await this.postRepository.delete({ id: id });
+      if (!deleteResults.affected || deleteResults.affected === 0) {
+        throw new AppError(ErrorCodes.BAD_REQUEST, ErrorMessages.BAD_REQUEST);
+      }
+      return deleteResults.affected;
+    } catch (error) {
+      throw error;
     }
-    return deleteResults.affected;
   }
 
   async updateById(id: number, dto: PostUpdateDto): Promise<Post> {
-    const post = await this.postRepository.findOneBy({ id });
+    try {
+      const post = await this.postRepository.findOneBy({ id });
 
-    if (!post) {
-      throw new AppError(
-        ErrorCodes.POST_NOT_FOUND,
-        ErrorMessages.POST_NOT_FOUND,
-      );
-    }
+      if (!post) {
+        throw new AppError(
+          ErrorCodes.POST_NOT_FOUND,
+          ErrorMessages.POST_NOT_FOUND,
+        );
+      }
 
-    if (dto.title) {
-      post.title = dto.title;
-    }
-    if (dto.text) {
-      post.text = dto.text;
-    }
-    if (dto.tags) {
-      post.tags = await this.tagRepository.findBy({ id: In(dto.tags) });
-    }
+      if (dto.title) {
+        post.title = dto.title;
+      }
+      if (dto.text) {
+        post.text = dto.text;
+      }
+      if (dto.tags) {
+        post.tags = await this.tagRepository.findBy({ id: In(dto.tags) });
+      }
 
-    return await this.postRepository.save(post);
+      return await this.postRepository.save(post);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async create(dto: PostCreateDto): Promise<Post> {
-    const post = new Post();
+    try {
+      const post = new Post();
 
-    post.title = dto.title;
-    post.text = dto.text;
-    if (dto.tags && dto.tags.length > 0) {
-      post.tags = await this.tagRepository.findBy({ id: In(dto.tags) });
+      post.title = dto.title;
+      post.text = dto.text;
+      if (dto.tags && dto.tags.length > 0) {
+        post.tags = await this.tagRepository.findBy({ id: In(dto.tags) });
+      }
+
+      return await this.postRepository.save(post);
+    } catch (error) {
+      throw error;
     }
-
-    return await this.postRepository.save(post);
   }
 }

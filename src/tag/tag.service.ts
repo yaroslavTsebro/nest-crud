@@ -15,44 +15,73 @@ export class TagService {
   ) {}
 
   async findAll(): Promise<Tag[]> {
-    return await this.tagRepository.find();
+    try {
+      return await this.tagRepository.find();
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findById(id: number): Promise<Tag> {
-    const tag = await this.tagRepository.findOneBy({
-      id,
-    });
+    try {
+      const tag = await this.tagRepository.findOneBy({
+        id,
+      });
 
-    if (!tag) {
-      throw new AppError(ErrorCodes.TAG_NOT_FOUND, ErrorMessages.TAG_NOT_FOUND);
+      if (!tag) {
+        throw new AppError(
+          ErrorCodes.TAG_NOT_FOUND,
+          ErrorMessages.TAG_NOT_FOUND,
+        );
+      }
+      tag.posts = await tag.posts;
+      return tag;
+    } catch (error) {
+      throw error;
     }
-    tag.posts = await tag.posts;
-    return tag;
   }
 
   async deleteById(id: number): Promise<number> {
-    const deleteResults = await this.tagRepository.delete({ id: id });
-    if (!deleteResults.affected || deleteResults.affected === 0) {
-      throw new AppError(ErrorCodes.TAG_NOT_FOUND, ErrorMessages.TAG_NOT_FOUND);
+    try {
+      const deleteResults = await this.tagRepository.delete({ id: id });
+      if (!deleteResults.affected || deleteResults.affected === 0) {
+        throw new AppError(
+          ErrorCodes.TAG_NOT_FOUND,
+          ErrorMessages.TAG_NOT_FOUND,
+        );
+      }
+      return deleteResults.affected;
+    } catch (error) {
+      throw error;
     }
-    return deleteResults.affected;
   }
 
   async updateById(id: number, dto: TagDto): Promise<Tag> {
-    const tag = await this.tagRepository.findOneBy({ id });
+    try {
+      const tag = await this.tagRepository.findOneBy({ id });
 
-    if (!tag) {
-      throw new AppError(ErrorCodes.TAG_NOT_FOUND, ErrorMessages.TAG_NOT_FOUND);
+      if (!tag) {
+        throw new AppError(
+          ErrorCodes.TAG_NOT_FOUND,
+          ErrorMessages.TAG_NOT_FOUND,
+        );
+      }
+      tag.name = dto.name;
+
+      return await this.tagRepository.save(tag);
+    } catch (error) {
+      throw error;
     }
-    tag.name = dto.name;
-
-    return await this.tagRepository.save(tag);
   }
 
   async create(dto: TagDto): Promise<Tag> {
-    const post = new Tag();
+    try {
+      const post = new Tag();
 
-    post.name = dto.name;
-    return await this.tagRepository.save(post);
+      post.name = dto.name;
+      return await this.tagRepository.save(post);
+    } catch (error) {
+      throw error;
+    }
   }
 }
