@@ -16,8 +16,8 @@ async function bootstrap() {
     .addTag('tag')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
-
+  SwaggerModule.setup('swagger', app, document);
+  app.setGlobalPrefix('api');
   app.useLogger(app.get(Logger));
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
   app.useGlobalPipes(new ValidationPipe());
