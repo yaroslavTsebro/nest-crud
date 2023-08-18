@@ -4,9 +4,20 @@ import { PORT } from './config';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import { ValidationPipe } from './shared/validation.pipe';
 import { AppExceptionFilter } from './shared/app-exception.filter';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const config = new DocumentBuilder()
+    .setTitle('Post-tag example')
+    .setDescription('The Post-tag API description')
+    .setVersion('1.0')
+    .addTag('post')
+    .addTag('tag')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
   app.useLogger(app.get(Logger));
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
   app.useGlobalPipes(new ValidationPipe());
