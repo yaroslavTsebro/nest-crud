@@ -4,9 +4,10 @@ import { Post } from 'src/post/post.entity';
 import { Tag } from 'src/tag/tag.entity';
 
 function DatabaseOrmModule(): DynamicModule {
+  const appModeIsProd = process.env.NODE_ENV === 'production' ? true : false;
   return TypeOrmModule.forRoot({
     type: 'postgres',
-    host: 'host.docker.internal',
+    host: appModeIsProd ? 'host.docker.internal' : 'localhost',
     port: Number(process.env.DB_PORT) || 5432,
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASS || 'zsbldqpk56',
